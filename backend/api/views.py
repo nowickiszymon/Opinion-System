@@ -8,7 +8,21 @@ from .models import Opinion
 from .serializers import OpinionSerializer
 
 class OpinionList(APIView):
+        '''
+                Get All Opinions
+        '''
         def get(self, request, format=None):
                 snippet = Opinion.objects.all()
                 serializer = OpinionSerializer(snippet, many=True)
                 return Response(serializer.data)
+
+class OpinionCreate(APIView):
+        '''
+                Create new Opinion
+        '''
+        def post(self, request, format=None):
+                serializer = OpinionSerializer(data=request.data)
+                if serializer.is_valid():
+                        serializer.save()
+                        return Response(serializer.data, status=status.HTTP_201_CREATED)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
